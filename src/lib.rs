@@ -34,3 +34,21 @@ pub fn create_post<'a>(conn: &PgConnection, title: &'a str, body: &'a str) -> Po
         .get_result(conn)
         .expect("Error saving new post")
 }
+
+pub fn show_posts() -> String {
+    use crate::schema::posts::dsl::*;
+
+    let connection = establish_connection();
+    let results = posts.filter(published.eq(true))
+        .limit(5)
+        .load::<Post>(&connection)
+        .expect("Error loading posts");
+
+    let mut result = format!("Displaying {} posts\n", results.len()).to_owned();
+    for post in results {
+        result.push_str(
+            &format!("\n{}\n----------\n{}\n", post.title, post.body)
+        );
+    }
+    result
+}
