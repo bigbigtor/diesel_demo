@@ -52,3 +52,13 @@ pub fn show_posts() -> String {
     }
     result
 }
+
+pub fn delete_post_by_id (post_id: i32) -> QueryResult<usize> {
+    use crate::schema::posts::dsl::*;
+    let connection = establish_connection();
+    diesel::delete(
+        posts.filter(
+            id.eq(post_id)
+        )
+    ).execute(&connection)
+}
