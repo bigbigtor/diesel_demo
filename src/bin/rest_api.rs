@@ -16,13 +16,16 @@ fn show_all_posts() -> String {
             }
             result
         },
-        _ => String::from("asdf")
+        _ => String::from("Error retrieving posts from DB")
     }
 }
 
 #[delete("/delete/<id>")]
-fn delete(id: i32) {
-    delete_post_by_id(id);
+fn delete(id: i32) -> String {
+    match delete_post_by_id(id) {
+        Ok(num) => String::from(format!("Deleted {} post(s)", num)),
+        _ => String::from("Error deleting post(s)")
+    }
 }
 
 fn main() {
