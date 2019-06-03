@@ -6,7 +6,18 @@ use self::diesel_demo::*;
 
 #[get("/")]
 fn show_all_posts() -> String {
-    show_posts()
+    match get_posts() {
+        Ok(posts) => {
+            let mut result = format!("Displaying {} posts\n", posts.len()).to_owned();
+            for post in posts {
+                result.push_str(
+                    &format!("\n{}\n----------\n{}\n", post.title, post.body)
+                );
+            }
+            result
+        },
+        _ => String::from("asdf")
+    }
 }
 
 #[delete("/delete/<id>")]
